@@ -95,11 +95,11 @@ def main():
     ]
 
     riddle_footers = [
-        "Take your time to think about it 💕",
-        "No rush, just enjoy the moment 💖",
-        "Let it simmer in your heart 💌",
-        "Feel free to ponder on it 💝",
-        "Let the mystery unfold in your mind 💗",
+        "You have 30 seconds to think about it 💕",
+        "Take 30 seconds to let your heart ponder 💖",
+        "Give it 30 seconds and enjoy the moment 💌",
+        "Let the mystery sit for 30 seconds 💝",
+        "Think it over for 30 seconds, love 💗",
     ]
 
     riddle = (
