@@ -2,7 +2,7 @@ name: Daily Love Riddle 💖
 
 on:
     schedule:
-        - cron: "15 20 * * *" # Run at 8:15 PM every day
+        - cron: "30 4 * * *" # Run at 10:00 AM IST every day
     workflow_dispatch:
 
 jobs:
