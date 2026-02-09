@@ -112,6 +112,7 @@ def main():
     send_telegram_text(riddle)
 
     # wait for 30 seconds before sending the answer
+    logging.info("Waiting for 30 seconds before sending the answer...")
     time.sleep(30)
 
     # send answer to Love with a cute header and footer
