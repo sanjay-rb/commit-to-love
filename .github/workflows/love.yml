@@ -1,0 +1,40 @@
+name: Daily Love Riddle 💖
+
+on:
+    schedule:
+        - cron: "15 20 * * *" # Run at 8:15 PM every day
+    workflow_dispatch:
+
+jobs:
+    love:
+        runs-on: ubuntu-latest
+        steps:
+            # Checkout the repository
+            - uses: actions/checkout@v4
+
+            # Set up Python (if needed for future enhancements)
+            - name: Set up Python
+              uses: actions/setup-python@v4
+              with:
+                  python-version: "3.12.3"
+
+            # Install dependencies (if any)
+            - name: Install dependencies
+              run: |
+                  python -m pip install --upgrade pip
+                  pip install -r requirements.txt
+
+            # Run linting (optional, can be removed if not needed)
+            - name: Run pylint
+              run: |
+                  pylint main.py
+
+            # Create .env file with secrets
+            - name: Create .env file
+              run: |
+                  echo "${{ secrets.DOT_ENV }}" | base64 --decode > .env
+
+            # Trigger the riddle generation script
+            - name: Generate riddle
+              run: |
+                  python main.py
