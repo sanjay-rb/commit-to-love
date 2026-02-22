@@ -24,6 +24,11 @@ jobs:
                   python -m pip install --upgrade pip
                   pip install -r requirements.txt
 
+            # Run unit tests
+            - name: Run unit tests
+              run: |
+                  python -m unittest discover -s tests -p "test_*.py"
+
             # Run linting (optional, can be removed if not needed)
             - name: Run pylint
               run: |
