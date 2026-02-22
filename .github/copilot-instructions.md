@@ -1,3 +1,4 @@
+```instructions
 ### Project Guidelines
 
 ## Code Style
@@ -40,3 +41,5 @@
 
 If this matches what you need, I can apply these lines to `.github/copilot-instructions.md` (merging with existing content) and then open a short checklist PR template for future edits. What should I clarify or expand?
 - Prompts live in `prompt.txt` as templates, NOT hardcoded in Python
+
+```
