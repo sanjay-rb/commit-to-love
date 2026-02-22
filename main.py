@@ -40,6 +40,22 @@ def ask_open_router(prompt: str) -> str:
     return output.strip()
 
 
+def parse_riddle_output(output: str) -> tuple[str, str]:
+    """Parse LLM output into (riddle, answer).
+
+    Expects the output to contain the literal separator "Answer:". Returns
+    the two parts stripped. Raises ValueError with a clear message if the
+    separator is missing.
+    """
+    if "Answer:" not in output:
+        raise ValueError("LLM output missing literal 'Answer:' separator")
+
+    parts = output.split("Answer:", 1)
+    riddle_part = parts[0].strip()
+    answer_part = parts[1].strip()
+    return riddle_part, answer_part
+
+
 def send_telegram_text(text):
     """Send a text message to Telegram."""
 
@@ -75,13 +91,32 @@ def main():
 
     # Now 'prompt' has today's date and is ready for the LLM
     logging.info("Prompt generated: %s", prompt)
-    output = ask_open_router(prompt)
 
-    # print the output
-    logging.info("Output generated: %s", output)
-
-    # split riddle and answer
-    riddle, answer = output.split("Answer:")
+    # Try the LLM and parsing with a small retry/backoff loop. If the
+    # LLM returns text that doesn't contain the literal separator
+    # 'Answer:' we'll retry a few times before failing.
+    max_attempts = 3
+    output = None
+    for attempt in range(1, max_attempts + 1):
+        try:
+            output = ask_open_router(prompt)
+            logging.info("Output generated: %s", output)
+            riddle, answer = parse_riddle_output(output)
+            break
+        except ValueError as ve:
+            logging.warning("Parse attempt %d failed: %s", attempt, ve)
+            if attempt == max_attempts:
+                raise
+            backoff = 2 ** (attempt - 1)
+            logging.info("Waiting %s seconds before retrying...", backoff)
+            time.sleep(backoff)
+        except Exception as e:
+            logging.error("LLM request failed on attempt %d: %s", attempt, e)
+            if attempt == max_attempts:
+                raise
+            backoff = 2 ** (attempt - 1)
+            logging.info("Waiting %s seconds before retrying...", backoff)
+            time.sleep(backoff)
     logging.info("Generated riddle: %s", riddle)
     logging.info("Generated answer: %s", answer)
 
